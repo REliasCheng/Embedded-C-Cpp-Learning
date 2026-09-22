@@ -1,0 +1,47 @@
+# C 多文件设计
+
+## 项目简介
+
+这个课程案例把一次函数调用拆成声明、实现和入口三个位置，便于观察 C 程序如何跨文件建立接口。`course/` 保留 day04 原始代码，没有改动教学注释。
+
+## 技术背景
+
+当函数不再全部写进 `main.c`，调用方必须先知道函数签名，链接器还必须找到实现。本例只做一件事：`main()` 调用 `sayHi()`。它规模很小，但把头文件声明与源文件实现的关系暴露得很清楚。
+
+## 实现结构
+
+```text
+main.c ──include──> calc.h ──声明──> sayHi()
+   │                                  ↑
+   └──────────调用────────────────────┤
+calc.c ──include──> calc.h ──实现──────┘
+
+main.c ──include──> A.h
+   └────include──> B.h ──include──> A.h
+```
+
+`A.h` 的 include guard 避免同一翻译单元重复包含。原文件同时在头文件里定义 `age`，而 `main.c` 并未使用它；若以后多个 `.c` 都包含该头文件，可能产生重复定义。这里保留原写法，只在文档指出这个接口边界。
+
+## 核心代码分析
+
+- `calc.h` 声明 `void sayHi();`，让 `main.c` 知道调用接口。
+- `calc.c` 提供 `sayHi()` 的实现，使用 `printf` 输出固定文本。
+- `main.c` 引入头文件并调用 `sayHi()`。构建时需同时编译 `main.c` 与 `calc.c`；只有头文件不能提供链接所需的函数定义。
+
+从仓库根目录构建：
+
+```powershell
+New-Item -ItemType Directory -Path .build -Force | Out-Null
+gcc -std=c11 -Wall -Wextra -pedantic projects/c-module-design/course/main.c projects/c-module-design/course/calc.c -o .build/c-module-design.exe
+./.build/c-module-design.exe
+```
+
+## 调试记录
+
+本次在 Windows 的 GCC 16.1.0 环境中，向含中文目录的绝对输出路径传 `-o` 时，链接器报告找不到输出文件；切换到仓库根目录并使用相对输出路径后，编译和运行均成功。程序输出 `Hi~!~66666666666666`，退出码为 0。这是本机工具链路径问题，不是课程源码逻辑修改。
+
+## 技术总结
+
+这个例子对应我对“声明供调用方使用，实现参与最终链接”的理解。头文件既是接口入口，也可能带来依赖和全局定义风险；以后增加源文件时，应先检查头文件里是否放了变量定义。
+
+原始位置：`day04/03_代码/05_多文件编程 - 基本使用/MyProject/`。仅迁入 `main.c`、`calc.c`、`calc.h`、`A.h`、`B.h`；原项目的 EXE、对象文件和 IDE 状态未复制。

@@ -1,0 +1,7 @@
+# Keep course files byte-for-byte, including their original encoding and line endings.
+projects/**/course/** -text
+
+# Normalize repository-authored documentation.
+*.md text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
