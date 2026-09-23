@@ -1,8 +1,8 @@
 # Embedded-C-Cpp-Learning
 
-嵌入式 C/C++ 程序设计与工程实践记录。仓库以语言能力、接口设计和可验证的小工程为主线：保留精选课程源码，同时把我写的改进版本放在独立目录，对照说明为什么调整参数、错误路径和状态边界。
+嵌入式 C/C++ 程序设计与工程实践记录。仓库从数据表示、指针和内存开始，继续覆盖多文件接口、回调、对象封装与状态机，并用命令处理框架和轻量任务管理器把这些能力组合成可独立构建的软件项目。
 
-这里的课程实践与个人代码不是同一来源；当前验证以 Windows 主机端编译运行为主，没有把模拟逻辑宣称为板级驱动。硬件外设实践另见 [STC89C52RC 学习仓库](https://github.com/REliasCheng/stc89c52-learning)。
+精选课程源码保存在 `course/`，个人实现保存在 `practice/`。主机端测试负责验证接口、边界和状态转换；硬件外设实践另见 [STC89C52RC 学习仓库](https://github.com/REliasCheng/stc89c52-learning)。
 
 ## 技术能力地图
 
@@ -15,6 +15,7 @@
 | 程序设计 | 头源分离、模块内部状态、函数指针回调 | [程序设计能力](projects/03_程序设计能力/README.md) |
 | C++ 程序设计 | 类/构造、私有状态、引用、`vector` | [C++ 程序设计](projects/04_C++程序设计/README.md) |
 | 嵌入式软件思想 | 分层与接口边界分析、主机端事件状态机 | [嵌入式软件思想](projects/05_嵌入式软件思想/README.md) |
+| 综合软件实践 | 环形缓冲区、命令回调、任务表、周期 tick 与故障状态 | [综合软件实践](projects/06_综合软件实践/README.md) |
 
 ## 代表性实践
 
@@ -28,6 +29,8 @@
 | [多文件 counter](projects/03_程序设计能力/多文件工程设计/practice/counter.h) | 头文件只暴露接口，状态留在实现文件 | 加减和溢出拒绝 |
 | [受控的 Student 类](projects/04_C++程序设计/封装设计/practice/student.hpp) | 私有字段、构造校验、受检更新 | 有效对象与无效状态 |
 | [事件状态机](projects/05_嵌入式软件思想/状态机思想/practice/key_fsm.h) | 状态与输入事件分离 | 主机端短按、长按序列 |
+| [嵌入式命令处理框架](projects/06_综合软件实践/嵌入式命令处理框架/README.md) | 环形缓冲、逐字节组帧、命令表与回调分发 | 正常命令、参数错误、未知命令、溢出恢复 |
+| [轻量任务状态管理](projects/06_综合软件实践/轻量任务状态管理/README.md) | 固定任务表、周期 tick、运行/停止/故障转换 | 双周期任务、故障隔离、复位重启 |
 
 ## 软件结构与来源
 
@@ -38,13 +41,14 @@ projects/
   03_程序设计能力/
   04_C++程序设计/
   05_嵌入式软件思想/
+  06_综合软件实践/
 docs/                 构建、结构、调试和技术关联
 assets/               真实图片/视频的预留位置
 ```
 
 每个技术主题按实际内容使用 `course/`（课程原版）、`practice/`（个人代码）和 `docs/`（分析与来源）。没有真实代码时不创建空实践目录。V1 的三个专题已归入对应技术主题，源码和原有分析均保留；课程编号只用于 [来源追溯](docs/学习与工程路线.md)，不作为首页目录。
 
-源码归属与公开使用边界见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。前期资产盘点保留为历史快照 [PROJECT_REVIEW.md](PROJECT_REVIEW.md)，不是当前仓库导航。
+源码归属与公开使用边界见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。根目录 [LICENSE](LICENSE) 仅覆盖本人有权授权的原创代码和文档。
 
 ## 构建与验证
 
@@ -63,4 +67,8 @@ assets/               真实图片/视频的预留位置
 
 目前展示证据是源码、差异分析和主机端验证记录。[assets](assets/README.md) 为真实架构图、终端截图和演示视频预留位置，没有使用占位照片。
 
-下一步以实际代码推进：为文件记录定义可移植格式，在目标板上验证一个清晰的驱动接口，并为状态机加入输入消抖与定时来源。完成前，这些不列为现有成果。
+## 技术路线中的位置
+
+[Embedded-Systems-Foundations](https://github.com/REliasCheng/Embedded-Systems-Foundations) → **Embedded-C-Cpp-Learning** → [stc89c52-learning](https://github.com/REliasCheng/stc89c52-learning) → [BlueBridgeCup-MCU](https://github.com/REliasCheng/BlueBridgeCup-MCU)
+
+下一步把已经验证的缓冲区、命令分发和状态管理接口带到真实 MCU 通信与任务调度中，再继续进入 STM32、FreeRTOS 和 Embedded Linux。
