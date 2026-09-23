@@ -6,6 +6,7 @@ projects/**/course/** -text
 .gitignore text eol=lf
 .gitattributes text eol=lf
 LICENSE text eol=lf
+*.svg text eol=lf
 projects/**/practice/**/*.c text eol=lf
 projects/**/practice/**/*.h text eol=lf
 projects/**/tests/**/*.c text eol=lf

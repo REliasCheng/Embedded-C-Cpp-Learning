@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="300" viewBox="0 0 1180 300" role="img" aria-labelledby="title desc">
+  <title id="title">Command framework architecture</title>
+  <desc id="desc">Bytes enter a ring buffer, are assembled into a line, parsed through a command table, dispatched to callbacks and update device state.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#57606a"/></marker>
+    <style>
+      .box{fill:#f6f8fa;stroke:#57606a;stroke-width:2;rx:12}.accent{fill:#ddf4ff;stroke:#0969da}.state{fill:#dafbe1;stroke:#1a7f37}.label{font:600 18px Arial,sans-serif;fill:#24292f;text-anchor:middle}.sub{font:14px Arial,sans-serif;fill:#57606a;text-anchor:middle}.line{stroke:#57606a;stroke-width:3;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect width="1180" height="300" fill="#ffffff"/>
+  <rect class="box" x="30" y="95" width="150" height="90"/><text class="label" x="105" y="130">Byte input</text><text class="sub" x="105" y="158">feed()</text>
+  <rect class="box accent" x="230" y="95" width="170" height="90"/><text class="label" x="315" y="130">Ring buffer</text><text class="sub" x="315" y="158">64-byte queue</text>
+  <rect class="box" x="450" y="95" width="170" height="90"/><text class="label" x="535" y="130">Line assembly</text><text class="sub" x="535" y="158">newline / overflow</text>
+  <rect class="box accent" x="670" y="95" width="170" height="90"/><text class="label" x="755" y="130">Command table</text><text class="sub" x="755" y="158">parser + lookup</text>
+  <rect class="box" x="890" y="95" width="120" height="90"/><text class="label" x="950" y="130">Callback</text><text class="sub" x="950" y="158">handler()</text>
+  <rect class="box state" x="1050" y="95" width="110" height="90"/><text class="label" x="1105" y="130">State</text><text class="sub" x="1105" y="158">LED / mode</text>
+  <line class="line" x1="180" y1="140" x2="225" y2="140"/><line class="line" x1="400" y1="140" x2="445" y2="140"/><line class="line" x1="620" y1="140" x2="665" y2="140"/><line class="line" x1="840" y1="140" x2="885" y2="140"/><line class="line" x1="1010" y1="140" x2="1045" y2="140"/>
+  <text class="sub" x="590" y="245">Input → buffer → parser → callback → observable device state</text>
+</svg>
