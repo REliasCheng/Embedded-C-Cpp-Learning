@@ -45,4 +45,4 @@ gcc -std=c11 -Wall -Wextra -Werror -pedantic `
 .\firmware-console-test.exe
 ```
 
-该项目位于 `practice/`，是对两个既有个人模块的集成实现，不改动 `course/` 参考源码。
+该项目位于 `practice/`，集成命令处理框架和轻量任务管理器。
