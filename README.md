@@ -2,7 +2,7 @@
 
 ## Overview
 
-C/C++ 语言练习与嵌入式软件结构实验。内容包括数据表示、指针与内存、多文件接口、回调、对象封装和状态机，并包含两个可在主机端独立构建的软件项目。
+C/C++ 语言练习与嵌入式软件结构实验。内容包括数据表示、指针与内存、多文件接口、回调、对象封装和状态机，并包含命令框架、任务管理和固件控制台集成项目。
 
 ## Architecture
 
@@ -19,7 +19,7 @@ C/C++ 语言练习与嵌入式软件结构实验。内容包括数据表示、�
 | [03 程序设计](projects/03_程序设计能力/README.md) | 头源分离、模块内部状态、接口和函数指针回调 |
 | [04 C++ 程序设计](projects/04_C++程序设计/README.md) | 引用、类、构造函数、封装和 vector |
 | [05 嵌入式软件结构](projects/05_嵌入式软件思想/README.md) | 分层、接口边界和事件状态机 |
-| [06 综合软件实践](projects/06_综合软件实践/README.md) | 命令处理框架与轻量任务管理器 |
+| [06 综合软件实践](projects/06_综合软件实践/README.md) | 命令处理框架、轻量任务管理器与固件控制台集成 |
 
 ### Command framework
 
@@ -36,6 +36,14 @@ RingBuffer 接收逐字节输入，CommandEngine 组装命令行并查询命令�
     tick → task table → state check → callback
 
 [源码与测试](projects/06_综合软件实践/轻量任务状态管理/README.md)
+
+### Firmware console integration
+
+集成项目将命令框架和任务管理器接入同一主循环：命令更新 `DeviceState`，周期任务通过 callback 读取并改变该状态，测试覆盖命令到任务的完整路径。
+
+    byte input → command engine → device state ← periodic callback ← task manager
+
+[源码与测试](projects/06_综合软件实践/固件控制台集成/README.md)
 
 ## Build / Run
 
