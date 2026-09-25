@@ -1,12 +1,16 @@
 # Embedded-C-Cpp-Learning
 
+## Overview
+
 C/C++ 语言练习与嵌入式软件结构实验。内容包括数据表示、指针与内存、多文件接口、回调、对象封装和状态机，并包含两个可在主机端独立构建的软件项目。
+
+## Architecture
 
 | 命令处理框架 | 轻量任务管理器 |
 | --- | --- |
-| ![命令处理框架架构](assets/images/command-framework-architecture.svg) | ![轻量任务管理架构](assets/images/task-manager-architecture.svg) |
+| ![命令处理框架架构](assets/images/architecture/command-framework-architecture.svg) | ![轻量任务管理架构](assets/images/architecture/task-manager-architecture.svg) |
 
-## 项目
+## Technical Highlights
 
 | 目录 | 内容 |
 | --- | --- |
@@ -33,13 +37,15 @@ RingBuffer 接收逐字节输入，CommandEngine 组装命令行并查询命令�
 
 [源码与测试](projects/06_综合软件实践/轻量任务状态管理/README.md)
 
-## 构建与测试
+## Build / Run
 
 个人实践使用 GCC/G++ 16.1.0 在 Windows 上构建，C 与 C++ 示例分别采用 C11 和 C++11，并启用：
 
     -Wall -Wextra -Werror -pedantic
 
-课程 C++ 文件包含 GBK 编码源码，编译时需要 -finput-charset=GBK。完整命令见[编译环境说明](docs/编译环境说明.md)，测试方法见[调试方法](docs/调试方法.md)。
+部分 C++ 示例采用 GBK 编码，编译时需要 `-finput-charset=GBK`。完整命令见[编译环境说明](docs/编译环境说明.md)，测试方法见[调试方法](docs/调试方法.md)。
+
+## Project Structure
 
     projects/
     ├─ 01_C语言基础能力/
@@ -49,4 +55,16 @@ RingBuffer 接收逐字节输入，CommandEngine 组装命令行并查询命令�
     ├─ 05_嵌入式软件思想/
     └─ 06_综合软件实践/
 
-各主题中的 course/ 保存课程源码，practice/ 保存个人实现，docs/ 记录接口和来源。详细来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+各主题中的 `course/` 保存参考示例，`practice/` 保存个人实现，`docs/` 记录接口和构建说明。来源与许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+## Documentation
+
+- [C 语言与嵌入式开发](docs/C语言与嵌入式开发关联.md)
+- [工程结构设计](docs/工程结构设计.md)
+- [代码规范](docs/代码规范.md)
+- [调试方法](docs/调试方法.md)
+
+## Related Projects
+
+- [stc89c52-learning](https://github.com/REliasCheng/stc89c52-learning)：C51 外设驱动与多外设应用。
+- [STC8-MCU-Learning](https://github.com/REliasCheng/STC8-MCU-Learning)：增强型 8051 外设、通信与任务协作。
