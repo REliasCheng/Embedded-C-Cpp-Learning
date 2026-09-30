@@ -1,0 +1,20 @@
+# Local build outputs
+.build/
+build/
+cmake-build-*/
+*.exe
+*.o
+*.obj
+*.a
+*.dll
+*.pdb
+
+# IDE and operating-system state
+.idea/
+.vs/
+.vscode/*.log
+*.layout
+*.bookmarks
+*.debug
+.DS_Store
+Thumbs.db
