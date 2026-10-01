@@ -1,8 +1,8 @@
-# Retained image sources
+# Image Sources
 
-All SVG files below are classified by the authoritative inventory as repository-authored (`ORIGINAL_SVG`, `CLEAR`):
+本目录中的架构图均由仓库维护者根据当前代码模块与调用关系自行绘制：
 
-- $((Normalize-Path @{REPOSITORY=Embedded-C-Cpp-Learning; FILE_OR_COMPONENT=command-framework-architecture.svg; PATH=assets/images/architecture/command-framework-architecture.svg; CATEGORY=ORIGINAL_SVG; UPSTREAM_PROJECT=Repository-authored technical diagram; UPSTREAM_URL=; COPYRIGHT_NOTICE_PRESENT=NO; COPYRIGHT_HOLDER=REliasCheng / repository maintainer; LICENSE_ID=MIT; LICENSE_SOURCE=Repository root LICENSE; LICENSE_FILE_PRESENT=YES; REDISTRIBUTION_ESTABLISHED=YES; MODIFICATION_ALLOWED=YES; NOTICE_REQUIRED=YES; NOTICE_PRESENT=YES; SOURCE_DISCLOSURE_REQUIREMENT=NO; GENERATED_FROM=Repository facts and technical relationships; PUBLIC_STATUS=TRACKED; RISK_LEVEL=CLEAR; ACTION=NONE; NOTES=Repository-authored SVG; no embedded remote resource detected.}.PATH)) — SELF_AUTHORED
-- $((Normalize-Path @{REPOSITORY=Embedded-C-Cpp-Learning; FILE_OR_COMPONENT=task-manager-architecture.svg; PATH=assets/images/architecture/task-manager-architecture.svg; CATEGORY=ORIGINAL_SVG; UPSTREAM_PROJECT=Repository-authored technical diagram; UPSTREAM_URL=; COPYRIGHT_NOTICE_PRESENT=NO; COPYRIGHT_HOLDER=REliasCheng / repository maintainer; LICENSE_ID=MIT; LICENSE_SOURCE=Repository root LICENSE; LICENSE_FILE_PRESENT=YES; REDISTRIBUTION_ESTABLISHED=YES; MODIFICATION_ALLOWED=YES; NOTICE_REQUIRED=YES; NOTICE_PRESENT=YES; SOURCE_DISCLOSURE_REQUIREMENT=NO; GENERATED_FROM=Repository facts and technical relationships; PUBLIC_STATUS=TRACKED; RISK_LEVEL=CLEAR; ACTION=NONE; NOTES=Repository-authored SVG; no embedded remote resource detected.}.PATH)) — SELF_AUTHORED
+- `architecture/command-framework-architecture.svg`：命令输入、环形缓冲区、解析器与设备状态的数据流。
+- `architecture/task-manager-architecture.svg`：任务表、周期 tick、回调与上下文关系。
 
-No raster image, third-party image, unknown font, or generated UI asset is bundled in this candidate.
+SVG 不嵌入外部图片、远程资源或第三方字体，适用根目录 [MIT License](../../LICENSE)。
