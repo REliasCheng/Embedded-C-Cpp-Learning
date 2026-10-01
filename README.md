@@ -9,6 +9,42 @@
 - **测试方式**：主机端可执行程序与 `assert` 测试
 - **目标环境**：Windows 或 Linux 主机；核心逻辑不依赖特定 MCU
 
+## Quick Start
+
+以下命令在 Windows PowerShell 中从仓库根目录执行，只验证可移植的主机端软件逻辑。完整环境说明见[编译环境说明](docs/编译环境说明.md)。
+
+```powershell
+New-Item -ItemType Directory -Path .build -Force | Out-Null
+
+# Command Framework
+gcc -std=c11 -Wall -Wextra -Werror -pedantic `
+  projects/06_综合软件实践/嵌入式命令处理框架/practice/src/ring_buffer.c `
+  projects/06_综合软件实践/嵌入式命令处理框架/practice/src/device.c `
+  projects/06_综合软件实践/嵌入式命令处理框架/practice/src/command.c `
+  projects/06_综合软件实践/嵌入式命令处理框架/tests/test_command_framework.c `
+  -I projects/06_综合软件实践/嵌入式命令处理框架/practice/include `
+  -o .build/command-framework-test.exe
+./.build/command-framework-test.exe
+
+# Task Manager
+gcc -std=c11 -Wall -Wextra -Werror -pedantic `
+  projects/06_综合软件实践/轻量任务状态管理/practice/src/task_manager.c `
+  projects/06_综合软件实践/轻量任务状态管理/tests/test_task_manager.c `
+  -I projects/06_综合软件实践/轻量任务状态管理/practice/include `
+  -o .build/task-manager-test.exe
+./.build/task-manager-test.exe
+```
+
+这些命令不代表 MCU 交叉编译、Keil 构建或开发板运行验证。
+
+## Featured Examples
+
+| 示例 | 源码入口 | 测试入口 | 展示重点 |
+| --- | --- | --- | --- |
+| Command Framework | [`command.c`](projects/06_综合软件实践/嵌入式命令处理框架/practice/src/command.c) | [`test_command_framework.c`](projects/06_综合软件实践/嵌入式命令处理框架/tests/test_command_framework.c) | 固定容量输入、命令解析、错误边界与设备状态更新 |
+| Task Manager | [`task_manager.c`](projects/06_综合软件实践/轻量任务状态管理/practice/src/task_manager.c) | [`test_task_manager.c`](projects/06_综合软件实践/轻量任务状态管理/tests/test_task_manager.c) | 周期任务、运行状态、故障与复位流程 |
+| Firmware Console | [`firmware_console.c`](projects/06_综合软件实践/固件控制台集成/practice/src/firmware_console.c) | [`test_firmware_console.c`](projects/06_综合软件实践/固件控制台集成/tests/test_firmware_console.c) | 命令框架与任务管理的组合、回调边界与集成测试 |
+
 ## 架构说明
 
 ### 命令处理框架
@@ -47,6 +83,15 @@ projects/
 docs/                       工程方法、构建与调试记录
 assets/images/architecture/ 自绘架构图
 ```
+
+### 目录导航
+
+| 想查看的内容 | 入口 |
+| --- | --- |
+| C/C++ 基础与模块化源码 | [`projects/01_C语言基础能力`](projects/01_C语言基础能力) → [`projects/04_C++程序设计`](projects/04_C++程序设计) |
+| 嵌入式软件结构源码 | [`projects/05_嵌入式软件思想`](projects/05_嵌入式软件思想) 与 [`projects/06_综合软件实践`](projects/06_综合软件实践) |
+| 主机端测试 | [`Command Framework tests`](projects/06_综合软件实践/嵌入式命令处理框架/tests) · [`Task Manager tests`](projects/06_综合软件实践/轻量任务状态管理/tests) · [`Firmware Console tests`](projects/06_综合软件实践/固件控制台集成/tests) |
+| 构建、设计与调试文档 | [`docs`](docs) |
 
 ## 文档导航
 
