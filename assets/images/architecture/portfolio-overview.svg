@@ -1,32 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
-  <title id="title">Embedded C/C++ software path</title>
-  <desc id="desc">Input data moves through portable modules and explicit state before host-side verification.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-labelledby="title desc">
+  <title id="title">Portable embedded software core</title>
+  <desc id="desc">Bytes and events feed parallel command and task modules, converge in a firmware console, and remain observable through host tests.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#8b949e"/></marker>
-    <style>
-      .bg{fill:#0d1117}.grid{stroke:#30363d;stroke-width:1;opacity:.35}.box{stroke-width:2}.input{fill:#21262d;stroke:#8b949e}.core{fill:#0d419d;stroke:#58a6ff}.hardware{fill:#1f6f3d;stroke:#3fb950}.output{fill:#f0f6fc;stroke:#c9d1d9}.title{font:700 27px system-ui,sans-serif;fill:#f0f6fc}.subtitle{font:16px system-ui,sans-serif;fill:#8b949e}.label{font:700 17px system-ui,sans-serif;fill:#f0f6fc;text-anchor:middle}.detail{font:13px system-ui,sans-serif;fill:#c9d1d9;text-anchor:middle}.dark{fill:#0d1117}.arrow{stroke:#8b949e;stroke-width:3;marker-end:url(#arrow)}.footer{font:14px system-ui,sans-serif;fill:#8b949e;text-anchor:middle}
-    </style>
+    <style>.bg{fill:#0d1117}.grid{stroke:#30363d;opacity:.28}.box{stroke-width:2}.input{fill:#21262d;stroke:#8b949e}.core{fill:#0d419d;stroke:#58a6ff}.platform{fill:#1f6f3d;stroke:#3fb950}.output{fill:#f0f6fc;stroke:#c9d1d9}.title{font:700 28px system-ui,sans-serif;fill:#f0f6fc}.sub{font:16px system-ui,sans-serif;fill:#8b949e}.label{font:700 17px system-ui,sans-serif;fill:#f0f6fc;text-anchor:middle}.detail{font:13px system-ui,sans-serif;fill:#c9d1d9;text-anchor:middle}.dark{fill:#0d1117}.arrow{fill:none;stroke:#8b949e;stroke-width:3;marker-end:url(#arrow)}</style>
   </defs>
-  <rect class="bg" width="1200" height="360" rx="22"/>
-  <path class="grid" d="M0 90H1200M0 270H1200M240 0V360M480 0V360M720 0V360M960 0V360"/>
-  <text class="title" x="50" y="54">Embedded C/C++ software path</text>
-  <text class="subtitle" x="50" y="84">Portable modules · explicit state · host-visible behavior</text>
-  <rect class="box input" x="50" y="140" width="180" height="92" rx="14"/>
-  <text class="label" x="140" y="177">Input</text>
-  <text class="detail" x="140" y="205">bytes / events</text>
-  <rect class="box core" x="280" y="140" width="180" height="92" rx="14"/>
-  <text class="label" x="370" y="177">Module</text>
-  <text class="detail" x="370" y="205">bounded API</text>
-  <rect class="box core" x="510" y="140" width="180" height="92" rx="14"/>
-  <text class="label" x="600" y="177">State Machine</text>
-  <text class="detail" x="600" y="205">explicit state</text>
-  <rect class="box hardware" x="740" y="140" width="180" height="92" rx="14"/>
-  <text class="label" x="830" y="177">Integration</text>
-  <text class="detail" x="830" y="205">callbacks</text>
-  <rect class="box output" x="970" y="140" width="180" height="92" rx="14"/>
-  <text class="label dark" x="1060" y="177">Evidence</text>
-  <text class="detail dark" x="1060" y="205">host tests</text>
-  <path class="arrow" d="M230 186H270"/><path class="arrow" d="M460 186H500"/><path class="arrow" d="M690 186H730"/><path class="arrow" d="M920 186H960"/>
-  <text class="footer" x="600" y="305">Portable software structure first; MCU and board validation are outside the current evidence.</text>
+  <rect class="bg" width="1200" height="440" rx="22"/><path class="grid" d="M0 110H1200M0 350H1200M300 0V440M600 0V440M900 0V440"/>
+  <text class="title" x="50" y="54">Portable Embedded Software Core</text><text class="sub" x="50" y="84">Bounded input · explicit state · reusable modules · host-visible behavior</text>
+  <rect class="box input" x="55" y="185" width="190" height="90" rx="14"/><text class="label" x="150" y="221">Bytes / Events</text><text class="detail" x="150" y="249">bounded input</text>
+  <rect class="box core" x="330" y="130" width="220" height="90" rx="14"/><text class="label" x="440" y="166">Command Framework</text><text class="detail" x="440" y="194">ring buffer · parser</text>
+  <rect class="box core" x="330" y="260" width="220" height="90" rx="14"/><text class="label" x="440" y="296">Task Manager</text><text class="detail" x="440" y="324">period · state · callback</text>
+  <rect class="box platform" x="645" y="185" width="220" height="90" rx="14"/><text class="label" x="755" y="221">Firmware Console</text><text class="detail" x="755" y="249">module integration</text>
+  <rect class="box output" x="950" y="185" width="190" height="90" rx="14"/><text class="label dark" x="1045" y="221">Host Tests</text><text class="detail dark" x="1045" y="249">assert evidence</text>
+  <path class="arrow" d="M245 225L330 175M245 235L330 305M550 175L645 215M550 305L645 245M865 230H950"/>
 </svg>
-

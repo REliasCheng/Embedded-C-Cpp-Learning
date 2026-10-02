@@ -2,19 +2,21 @@
 
 面向嵌入式软件开发的 C/C++ 基础与工程化实践仓库。
 
+**💻 Portable Software Core**
+
 ![Embedded C/C++ software path](assets/images/architecture/portfolio-overview.svg)
 
-## Project Snapshot
+## Software Snapshot
 
-| Field | Value |
+| Focus | Current Scope |
 | --- | --- |
-| Language | C11、C++11 |
-| Platform | Windows 或 Linux 主机；核心逻辑不依赖特定 MCU |
-| Toolchain | GCC / G++，`-Wall -Wextra -Werror -pedantic` |
-| Architecture | 多文件模块、状态机、命令框架、环形缓冲区与轻量任务管理 |
-| Verification | 主机端可执行程序与 `assert` 测试 |
+| Languages | C11、C++11 |
+| Host Environment | Windows / Linux；核心逻辑不依赖特定 MCU |
+| Software Core | Command Framework、Task Manager、Firmware Console |
+| Test Entry | GCC / G++ 主机构建与 `assert` 测试 |
+| Hardware Scope | 不面向特定 MCU；未执行板端验证 |
 
-> **Project status:** Architecture documented · Host Test passed · GCC/G++ host build passed · MCU build and hardware validation not performed
+> 🧪 **Evidence:** Portable core host-tested · GCC/G++ build passed · MCU and hardware validation not performed
 
 ## Overview
 
@@ -22,7 +24,7 @@
 
 ## Architecture
 
-### Command Framework
+### 🧱 Command Framework
 
 ![命令处理框架](assets/images/architecture/command-framework-architecture.svg)
 
