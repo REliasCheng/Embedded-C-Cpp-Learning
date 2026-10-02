@@ -18,11 +18,11 @@
 
 > 🧪 **Evidence:** Portable core host-tested · GCC/G++ build passed · MCU and hardware validation not performed
 
-## Overview
+## 📌 Overview
 
 内容从安全的数据处理接口出发，逐步覆盖多文件组织、C++ 封装、状态机、命令解析、环形缓冲区、轻量任务调度与可测试的软件边界。
 
-## Architecture
+## 🏗️ Architecture
 
 ### 🧱 Command Framework
 
@@ -36,7 +36,7 @@
 
 任务表保存周期、运行状态、回调与上下文；`tick` 只推进确定性的状态。固件控制台示例把命令框架与任务管理组合起来，展示模块复用和集成测试。
 
-## Key Features
+## ✨ Key Features
 
 ### Featured Examples
 
@@ -57,7 +57,7 @@
 | 状态机 | 按键事件模型 | 输入事件与状态转换解耦 |
 | 嵌入式软件结构 | 命令框架、任务管理、固件控制台 | 固定容量、回调、组合与可测试性 |
 
-## Project Structure
+## 📂 Project Structure
 
 ```text
 projects/
@@ -80,7 +80,7 @@ assets/images/architecture/ 自绘架构图
 | 主机端测试 | [`Command Framework tests`](projects/06_综合软件实践/嵌入式命令处理框架/tests) · [`Task Manager tests`](projects/06_综合软件实践/轻量任务状态管理/tests) · [`Firmware Console tests`](projects/06_综合软件实践/固件控制台集成/tests) |
 | 构建、设计与调试文档 | [`docs`](docs) |
 
-## Documentation
+## 📚 Documentation
 
 ### Quick Start
 
@@ -118,21 +118,21 @@ gcc -std=c11 -Wall -Wextra -Werror -pedantic `
 - [编译环境说明](docs/编译环境说明.md)
 - [调试方法](docs/调试方法.md)
 
-## Verification
+## 🧪 Verification
 
-### Host Test
+### 💻 Host Test
 
 Command Framework、Task Manager 和 Firmware Console 的主机端测试当前均通过。
 
-### Build Verification
+### 🔨 Build Verification
 
 现有主机端模块已使用 GCC/G++ 16.1.0 与严格警告选项构建通过。
 
-### Hardware Validation
+### 🔌 Hardware Validation
 
 **Status:** Not Performed. 当前结果不包含 MCU 交叉编译、Keil 构建或开发板运行验证。
 
-### Runtime Evidence
+### 📊 Runtime Evidence
 
 现有运行证据仅限主机端可执行程序与 `assert` 测试，不代表 MCU 或板端运行结果。
 
