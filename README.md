@@ -2,11 +2,9 @@
 
 面向嵌入式软件开发的 C/C++ 基础与工程化实践仓库。
 
-## Overview
+![Embedded C/C++ software path](assets/images/architecture/portfolio-overview.svg)
 
-内容从安全的数据处理接口出发，逐步覆盖多文件组织、C++ 封装、状态机、命令解析、环形缓冲区、轻量任务调度与可测试的软件边界。
-
-## Platform & Technology
+## Project Snapshot
 
 | Field | Value |
 | --- | --- |
@@ -15,6 +13,12 @@
 | Toolchain | GCC / G++，`-Wall -Wextra -Werror -pedantic` |
 | Architecture | 多文件模块、状态机、命令框架、环形缓冲区与轻量任务管理 |
 | Verification | 主机端可执行程序与 `assert` 测试 |
+
+> **Project status:** Architecture documented · Host Test passed · GCC/G++ host build passed · MCU build and hardware validation not performed
+
+## Overview
+
+内容从安全的数据处理接口出发，逐步覆盖多文件组织、C++ 封装、状态机、命令解析、环形缓冲区、轻量任务调度与可测试的软件边界。
 
 ## Architecture
 
