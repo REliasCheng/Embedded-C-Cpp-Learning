@@ -124,7 +124,7 @@ Command Framework、Task Manager 和 Firmware Console 的主机端测试当前�
 
 ### Hardware Validation
 
-Not performed。当前结果不包含 MCU 交叉编译、Keil 构建或开发板运行验证。
+**Status:** Not Performed. 当前结果不包含 MCU 交叉编译、Keil 构建或开发板运行验证。
 
 ### Runtime Evidence
 
