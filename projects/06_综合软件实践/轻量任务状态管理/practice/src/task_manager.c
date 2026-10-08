@@ -12,7 +12,7 @@ bool task_manager_add(TaskManager *manager, const char *name, uint32_t period_ti
 {
     TaskSlot *slot;
     if (manager == NULL || name == NULL || callback == NULL || period_ticks == 0U ||
-        manager->count == TASK_MANAGER_CAPACITY) {
+        manager->count >= TASK_MANAGER_CAPACITY) {
         return false;
     }
     slot = &manager->tasks[manager->count];

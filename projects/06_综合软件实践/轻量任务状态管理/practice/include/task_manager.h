@@ -31,6 +31,8 @@ typedef struct {
 } TaskManager;
 
 void task_manager_init(TaskManager *manager);
+
+/* Names are diagnostic labels; duplicate names are allowed as separate slots. */
 bool task_manager_add(TaskManager *manager, const char *name, uint32_t period_ticks,
                       TaskCallback callback, void *context, size_t *task_id);
 bool task_manager_start(TaskManager *manager, size_t task_id);
