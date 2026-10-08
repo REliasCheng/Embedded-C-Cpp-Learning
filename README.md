@@ -13,7 +13,7 @@
 | Languages | C11、C++11 |
 | Host Environment | Windows / Linux；核心逻辑不依赖特定 MCU |
 | Software Core | Command Framework、Task Manager、Firmware Console |
-| Test Entry | GCC / G++ 主机构建与 `assert` 测试 |
+| Test Entry | `python scripts/run_host_tests.py --compiler gcc` |
 | Hardware Scope | 不面向特定 MCU；未执行板端验证 |
 
 > 🧪 **Evidence:** Portable core host-tested · GCC/G++ build passed · MCU and hardware validation not performed
@@ -84,31 +84,13 @@ assets/images/architecture/ 自绘架构图
 
 ### Quick Start
 
-以下命令在 Windows PowerShell 中从仓库根目录执行，只验证可移植的主机端软件逻辑。完整环境说明见[编译环境说明](docs/编译环境说明.md)。
+以下命令从仓库根目录构建并执行 Command Framework、Ring Buffer、Task Manager 和 Firmware Console 四组主机端测试。完整环境说明见[编译环境说明](docs/编译环境说明.md)。
 
 ```powershell
-New-Item -ItemType Directory -Path .build -Force | Out-Null
-
-# Command Framework
-gcc -std=c11 -Wall -Wextra -Werror -pedantic `
-  projects/06_综合软件实践/嵌入式命令处理框架/practice/src/ring_buffer.c `
-  projects/06_综合软件实践/嵌入式命令处理框架/practice/src/device.c `
-  projects/06_综合软件实践/嵌入式命令处理框架/practice/src/command.c `
-  projects/06_综合软件实践/嵌入式命令处理框架/tests/test_command_framework.c `
-  -I projects/06_综合软件实践/嵌入式命令处理框架/practice/include `
-  -o .build/command-framework-test.exe
-./.build/command-framework-test.exe
-
-# Task Manager
-gcc -std=c11 -Wall -Wextra -Werror -pedantic `
-  projects/06_综合软件实践/轻量任务状态管理/practice/src/task_manager.c `
-  projects/06_综合软件实践/轻量任务状态管理/tests/test_task_manager.c `
-  -I projects/06_综合软件实践/轻量任务状态管理/practice/include `
-  -o .build/task-manager-test.exe
-./.build/task-manager-test.exe
+python scripts/run_host_tests.py --compiler gcc
 ```
 
-这些命令不代表 MCU 交叉编译、Keil 构建或开发板运行验证。
+Linux 或安装了 Clang 的主机可把编译器参数改为 `clang`。测试入口使用 C11、`-Wall -Wextra -Werror -pedantic`，并真实执行生成的测试程序；这不代表 MCU 交叉编译、Keil 构建或开发板运行验证。
 
 ### Reading Guide
 
@@ -122,11 +104,11 @@ gcc -std=c11 -Wall -Wextra -Werror -pedantic `
 
 ### 💻 Host Test
 
-Command Framework、Task Manager 和 Firmware Console 的主机端测试当前均通过。
+Command Framework、Ring Buffer、Task Manager 和 Firmware Console 的主机端测试当前均通过。错误路径测试覆盖短响应缓冲区、空参数、非法命令、解析隔离、任务容量与非法 ID；已覆盖的内部设备状态在命令失败时保持不变。
 
 ### 🔨 Build Verification
 
-现有主机端模块已使用 GCC/G++ 16.1.0 与严格警告选项构建通过。
+现有主机端 C 模块已使用 GCC 16.1.0 与严格警告选项构建通过。GitHub Actions 分别使用 GCC、Clang 构建并执行相同测试，并额外运行 GCC AddressSanitizer / UndefinedBehaviorSanitizer 检查。
 
 ### 🔌 Hardware Validation
 

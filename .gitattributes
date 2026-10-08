@@ -1,6 +1,3 @@
-# Keep course files byte-for-byte, including their original encoding and line endings.
-projects/**/course/** -text
-
 # Normalize repository-authored documentation.
 *.md text eol=lf
 .gitignore text eol=lf
@@ -10,3 +7,4 @@ LICENSE text eol=lf
 projects/**/practice/**/*.c text eol=lf
 projects/**/practice/**/*.h text eol=lf
 projects/**/tests/**/*.c text eol=lf
+scripts/*.py text eol=lf
