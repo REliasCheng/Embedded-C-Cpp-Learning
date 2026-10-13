@@ -185,6 +185,7 @@ void command_engine_init(CommandEngine *engine)
     device_init(&engine->device);
     engine->line_length = 0U;
     engine->dropping_line = false;
+    engine->dropped_result = COMMAND_OK;
 }
 
 bool command_engine_feed(CommandEngine *engine, uint8_t byte)
@@ -201,6 +202,7 @@ bool command_engine_process(CommandEngine *engine, char *response, size_t respon
     if (ring_buffer_take_overflow(&engine->rx)) {
         engine->line_length = 0U;
         engine->dropping_line = true;
+        engine->dropped_result = COMMAND_INPUT_OVERFLOW;
     }
     while (ring_buffer_pop(&engine->rx, &byte)) {
         if (byte == '\r') {
@@ -209,13 +211,16 @@ bool command_engine_process(CommandEngine *engine, char *response, size_t respon
         if (byte == '\n') {
             if (engine->dropping_line) {
                 CommandResult response_result;
+                CommandResult dropped_result = engine->dropped_result;
 
                 engine->dropping_line = false;
                 engine->line_length = 0U;
                 response_result = write_response(response, response_size,
-                                                 "ERR INPUT_OVERFLOW");
+                                                 dropped_result == COMMAND_INVALID_BYTE
+                                                     ? "ERR INVALID_BYTE"
+                                                     : "ERR INPUT_OVERFLOW");
                 *result = response_result == COMMAND_OK
-                              ? COMMAND_INPUT_OVERFLOW
+                              ? dropped_result
                               : response_result;
                 return true;
             }
@@ -227,8 +232,15 @@ bool command_engine_process(CommandEngine *engine, char *response, size_t respon
         if (engine->dropping_line) {
             continue;
         }
+        if (byte == 0U) {
+            engine->dropping_line = true;
+            engine->dropped_result = COMMAND_INVALID_BYTE;
+            engine->line_length = 0U;
+            continue;
+        }
         if (engine->line_length + 1U >= COMMAND_LINE_CAPACITY) {
             engine->dropping_line = true;
+            engine->dropped_result = COMMAND_INPUT_OVERFLOW;
             engine->line_length = 0U;
         } else {
             engine->line[engine->line_length++] = (char)byte;

@@ -218,6 +218,82 @@ static void test_null_arguments(void)
     assert(result == COMMAND_OK);
 }
 
+static void feed_bytes(CommandEngine *engine, const uint8_t *bytes, size_t length)
+{
+    size_t i;
+    for (i = 0U; i < length; ++i) {
+        assert(command_engine_feed(engine, bytes[i]));
+    }
+}
+
+static void test_embedded_nul_rejects_whole_frame_and_recovers(void)
+{
+    static const uint8_t nul_first[] = {0, 'l', 'e', 'd', ' ', 'o', 'n', '\n'};
+    static const uint8_t nul_middle[] = {'l', 'e', 'd', ' ', 'o', 'n', 0,
+                                          'g', 'a', 'r', 'b', 'a', 'g', 'e', '\n'};
+    static const uint8_t nul_last[] = {'m', 'o', 'd', 'e', ' ', '3', 0, '\n'};
+    static const uint8_t split_first[] = {'l', 'e', 'd', ' ', 'o', 'n', 0};
+    static const uint8_t split_last[] = {'m', 'o', 'd', 'e', ' ', '3', '\n'};
+    static const uint8_t two_commands[] = {'l', 'e', 'd', ' ', 'o', 'n', '\n',
+                                            'm', 'o', 'd', 'e', ' ', '2', '\n'};
+    const uint8_t *invalid[] = {nul_first, nul_middle, nul_last};
+    const size_t lengths[] = {sizeof(nul_first), sizeof(nul_middle), sizeof(nul_last)};
+    CommandEngine engine;
+    DeviceState before;
+    CommandResult result = COMMAND_OK;
+    char response[64];
+    size_t i;
+
+    command_engine_init(&engine);
+    before = engine.device;
+    for (i = 0U; i < sizeof(invalid) / sizeof(invalid[0]); ++i) {
+        feed_bytes(&engine, invalid[i], lengths[i]);
+        assert(command_engine_process(&engine, response, sizeof(response), &result));
+        assert(result == COMMAND_INVALID_BYTE);
+        assert(strcmp(response, "ERR INVALID_BYTE") == 0);
+        assert_state_equal(&engine.device, &before);
+    }
+
+    feed_bytes(&engine, split_first, sizeof(split_first));
+    assert(!command_engine_process(&engine, response, sizeof(response), &result));
+    feed_bytes(&engine, split_last, sizeof(split_last));
+    assert(command_engine_process(&engine, response, sizeof(response), &result));
+    assert(result == COMMAND_INVALID_BYTE);
+    assert_state_equal(&engine.device, &before);
+
+    feed_bytes(&engine, two_commands, sizeof(two_commands));
+    assert(command_engine_process(&engine, response, sizeof(response), &result));
+    assert(result == COMMAND_OK && engine.device.led_on);
+    assert(command_engine_process(&engine, response, sizeof(response), &result));
+    assert(result == COMMAND_OK && engine.device.mode == 2U);
+    assert(!command_engine_process(&engine, response, sizeof(response), &result));
+}
+
+static void test_ring_overflow_discards_until_lf(void)
+{
+    CommandEngine engine;
+    CommandResult result = COMMAND_EMPTY;
+    DeviceState before;
+    char response[64];
+    size_t i;
+
+    command_engine_init(&engine);
+    before = engine.device;
+    for (i = 0U; i < RING_BUFFER_CAPACITY; ++i) {
+        assert(command_engine_feed(&engine, (uint8_t)'x'));
+    }
+    assert(!command_engine_feed(&engine, (uint8_t)'x'));
+    assert(!command_engine_process(&engine, response, sizeof(response), &result));
+    assert_state_equal(&engine.device, &before);
+    assert(command_engine_feed(&engine, (uint8_t)'\n'));
+    assert(command_engine_process(&engine, response, sizeof(response), &result));
+    assert(result == COMMAND_INPUT_OVERFLOW);
+    assert(strcmp(response, "ERR INPUT_OVERFLOW") == 0);
+    assert_state_equal(&engine.device, &before);
+    assert(run_line(&engine, "led on\n", response, sizeof(response)) == COMMAND_OK);
+    assert(engine.device.led_on);
+}
+
 int main(void)
 {
     test_success_and_exact_capacity();
@@ -227,7 +303,9 @@ int main(void)
     test_parser_isolation();
     test_input_overflow_recovery();
     test_null_arguments();
+    test_embedded_nul_rejects_whole_frame_and_recovers();
+    test_ring_overflow_discards_until_lf();
 
-    puts("command framework tests passed (7 cases)");
+    puts("command framework tests passed (9 cases)");
     return 0;
 }

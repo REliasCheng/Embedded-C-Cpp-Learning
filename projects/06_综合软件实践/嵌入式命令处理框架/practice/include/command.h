@@ -16,7 +16,8 @@ typedef enum {
     COMMAND_UNKNOWN,
     COMMAND_BAD_ARGUMENT,
     COMMAND_INPUT_OVERFLOW,
-    COMMAND_RESPONSE_TOO_SMALL
+    COMMAND_RESPONSE_TOO_SMALL,
+    COMMAND_INVALID_BYTE
 } CommandResult;
 
 typedef struct {
@@ -25,6 +26,7 @@ typedef struct {
     char line[COMMAND_LINE_CAPACITY];
     size_t line_length;
     bool dropping_line;
+    CommandResult dropped_result;
 } CommandEngine;
 
 void command_engine_init(CommandEngine *engine);
