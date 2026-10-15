@@ -73,12 +73,41 @@ static void test_wrap_around_and_reset(void)
     assert(!ring_buffer_pop(&buffer, &value));
 }
 
+static void test_corrupt_indices_and_count_do_not_access_storage(void)
+{
+    RingBuffer buffer;
+    uint8_t value = 0xAAU;
+
+    ring_buffer_init(&buffer);
+    buffer.head = RING_BUFFER_CAPACITY;
+    assert(!ring_buffer_push(&buffer, 0x55U));
+    assert(buffer.head == RING_BUFFER_CAPACITY);
+    assert(!buffer.overflowed);
+
+    ring_buffer_init(&buffer);
+    buffer.tail = RING_BUFFER_CAPACITY;
+    buffer.count = 1U;
+    assert(!ring_buffer_pop(&buffer, &value));
+    assert(value == 0xAAU);
+    assert(buffer.tail == RING_BUFFER_CAPACITY);
+
+    ring_buffer_init(&buffer);
+    buffer.count = RING_BUFFER_CAPACITY + 1U;
+    buffer.overflowed = true;
+    assert(!ring_buffer_push(&buffer, 0x55U));
+    assert(!ring_buffer_pop(&buffer, &value));
+    assert(!ring_buffer_take_overflow(&buffer));
+    assert(buffer.overflowed);
+    assert(value == 0xAAU);
+}
+
 int main(void)
 {
     test_null_and_empty_arguments();
     test_fifo_full_and_overflow();
     test_wrap_around_and_reset();
+    test_corrupt_indices_and_count_do_not_access_storage();
 
-    puts("ring buffer tests passed (3 cases)");
+    puts("ring buffer tests passed (4 cases)");
     return 0;
 }
