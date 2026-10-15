@@ -86,8 +86,8 @@ void task_manager_tick(TaskManager *manager)
         }
         if (--slot->remaining_ticks == 0U) {
             slot->remaining_ticks = slot->period_ticks;
-            slot->callback(slot->context);
             ++slot->run_count;
+            slot->callback(slot->context);
         }
     }
 }

@@ -120,13 +120,50 @@ static void test_capacity_and_duplicate_names(void)
     }
 }
 
+typedef struct {
+    TaskManager *manager;
+    unsigned replacement_runs;
+    size_t replacement_id;
+} ReplacementContext;
+
+static void replace_schedule(void *context)
+{
+    ReplacementContext *replacement = context;
+    task_manager_init(replacement->manager);
+    assert(task_manager_add(replacement->manager, "replacement", 1U, increment,
+                            &replacement->replacement_runs, &replacement->replacement_id));
+    assert(task_manager_start(replacement->manager, replacement->replacement_id));
+}
+
+static void test_callback_reinitialization_does_not_count_replacement(void)
+{
+    TaskManager manager;
+    ReplacementContext replacement = {&manager, 0U, 99U};
+    size_t original_id;
+
+    task_manager_init(&manager);
+    assert(task_manager_add(&manager, "original", 1U, replace_schedule,
+                            &replacement, &original_id));
+    assert(task_manager_start(&manager, original_id));
+    task_manager_tick(&manager);
+    assert(manager.count == 1U);
+    assert(replacement.replacement_id == 0U);
+    assert(replacement.replacement_runs == 0U);
+    assert(manager.tasks[0].run_count == 0U);
+
+    task_manager_tick(&manager);
+    assert(replacement.replacement_runs == 1U);
+    assert(manager.tasks[0].run_count == 1U);
+}
+
 int main(void)
 {
     test_schedule_lifecycle();
     test_fault_and_reset();
     test_invalid_arguments_and_ids();
     test_capacity_and_duplicate_names();
+    test_callback_reinitialization_does_not_count_replacement();
 
-    puts("task manager tests passed (4 cases)");
+    puts("task manager tests passed (5 cases)");
     return 0;
 }
