@@ -2,10 +2,18 @@
 
 static bool ring_buffer_state_valid(const RingBuffer *buffer)
 {
-    return buffer != NULL &&
-           buffer->head < RING_BUFFER_CAPACITY &&
-           buffer->tail < RING_BUFFER_CAPACITY &&
-           buffer->count <= RING_BUFFER_CAPACITY;
+    size_t distance;
+
+    if (buffer == NULL || buffer->head >= RING_BUFFER_CAPACITY ||
+        buffer->tail >= RING_BUFFER_CAPACITY ||
+        buffer->count > RING_BUFFER_CAPACITY) {
+        return false;
+    }
+    distance = buffer->head >= buffer->tail
+                   ? buffer->head - buffer->tail
+                   : RING_BUFFER_CAPACITY - buffer->tail + buffer->head;
+    return buffer->count == distance ||
+           (buffer->count == RING_BUFFER_CAPACITY && distance == 0U);
 }
 
 void ring_buffer_init(RingBuffer *buffer)

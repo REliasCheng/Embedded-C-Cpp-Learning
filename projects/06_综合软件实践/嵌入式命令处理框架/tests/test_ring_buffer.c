@@ -101,13 +101,42 @@ static void test_corrupt_indices_and_count_do_not_access_storage(void)
     assert(value == 0xAAU);
 }
 
+static void test_inconsistent_but_in_range_state_is_rejected(void)
+{
+    RingBuffer buffer;
+    uint8_t value = 0xAAU;
+
+    ring_buffer_init(&buffer);
+    buffer.data[0] = 0x55U;
+    buffer.count = 1U; /* head == tail means empty or full, not one byte. */
+    buffer.overflowed = true;
+    assert(!ring_buffer_pop(&buffer, &value));
+    assert(value == 0xAAU);
+    assert(!ring_buffer_push(&buffer, 0x66U));
+    assert(!ring_buffer_take_overflow(&buffer));
+    assert(buffer.overflowed);
+
+    ring_buffer_init(&buffer);
+    buffer.head = 1U;
+    assert(!ring_buffer_push(&buffer, 0x66U));
+    assert(!ring_buffer_pop(&buffer, &value));
+    assert(value == 0xAAU);
+
+    ring_buffer_init(&buffer);
+    buffer.head = 1U;
+    buffer.count = 2U;
+    assert(!ring_buffer_pop(&buffer, &value));
+    assert(value == 0xAAU);
+}
+
 int main(void)
 {
     test_null_and_empty_arguments();
     test_fifo_full_and_overflow();
     test_wrap_around_and_reset();
     test_corrupt_indices_and_count_do_not_access_storage();
+    test_inconsistent_but_in_range_state_is_rejected();
 
-    puts("ring buffer tests passed (4 cases)");
+    puts("ring buffer tests passed (5 cases)");
     return 0;
 }
