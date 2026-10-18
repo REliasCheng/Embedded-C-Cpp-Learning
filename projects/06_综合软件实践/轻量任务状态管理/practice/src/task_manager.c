@@ -1,8 +1,13 @@
 #include "task_manager.h"
 
+/* Main-loop only: distinguishes a new schedule from slots reused in a callback. */
+static uint64_t next_generation = UINT64_C(0);
+
 void task_manager_init(TaskManager *manager)
 {
     if (manager != NULL) {
+        ++next_generation;
+        manager->generation = next_generation;
         manager->count = 0U;
     }
 }
@@ -76,11 +81,21 @@ bool task_manager_reset(TaskManager *manager, size_t task_id)
 void task_manager_tick(TaskManager *manager)
 {
     size_t i;
+    size_t initial_count;
+    uint64_t generation;
     if (manager == NULL) {
         return;
     }
-    for (i = 0U; i < manager->count; ++i) {
+    initial_count = manager->count;
+    if (initial_count > TASK_MANAGER_CAPACITY) {
+        return;
+    }
+    generation = manager->generation;
+    for (i = 0U; i < initial_count; ++i) {
         TaskSlot *slot = &manager->tasks[i];
+        if (manager->generation != generation || i >= manager->count) {
+            return;
+        }
         if (slot->state != TASK_RUNNING) {
             continue;
         }
@@ -88,6 +103,9 @@ void task_manager_tick(TaskManager *manager)
             slot->remaining_ticks = slot->period_ticks;
             ++slot->run_count;
             slot->callback(slot->context);
+            if (manager->generation != generation) {
+                return;
+            }
         }
     }
 }

@@ -156,6 +156,112 @@ static void test_callback_reinitialization_does_not_count_replacement(void)
     assert(manager.tasks[0].run_count == 1U);
 }
 
+typedef struct {
+    TaskManager *manager;
+    unsigned appended_runs;
+    size_t appended_id;
+} AppendContext;
+
+static void append_running_task(void *context)
+{
+    AppendContext *append = context;
+    assert(task_manager_add(append->manager, "appended", 1U, increment,
+                            &append->appended_runs, &append->appended_id));
+    assert(task_manager_start(append->manager, append->appended_id));
+}
+
+static void test_callback_append_waits_until_next_tick(void)
+{
+    TaskManager manager;
+    AppendContext append = {&manager, 0U, 99U};
+    size_t original_id;
+
+    task_manager_init(&manager);
+    assert(task_manager_add(&manager, "original", 1U, append_running_task,
+                            &append, &original_id));
+    assert(task_manager_start(&manager, original_id));
+    task_manager_tick(&manager);
+    assert(append.appended_id == 1U);
+    assert(append.appended_runs == 0U);
+    task_manager_tick(&manager);
+    assert(append.appended_runs == 1U);
+}
+
+typedef struct {
+    TaskManager *manager;
+    unsigned replacement_runs[2];
+} ReplaceAllContext;
+
+static void replace_multiple_tasks(void *context)
+{
+    ReplaceAllContext *replacement = context;
+    size_t first_id;
+    size_t second_id;
+
+    task_manager_init(replacement->manager);
+    assert(task_manager_add(replacement->manager, "first", 1U, increment,
+                            &replacement->replacement_runs[0], &first_id));
+    assert(task_manager_add(replacement->manager, "second", 1U, increment,
+                            &replacement->replacement_runs[1], &second_id));
+    assert(task_manager_start(replacement->manager, first_id));
+    assert(task_manager_start(replacement->manager, second_id));
+}
+
+static void test_callback_reinitialization_stops_current_tick(void)
+{
+    TaskManager manager;
+    ReplaceAllContext replacement = {&manager, {0U, 0U}};
+    size_t original_id;
+    size_t other_id;
+    unsigned old_other_runs = 0U;
+
+    task_manager_init(&manager);
+    assert(task_manager_add(&manager, "original", 1U, replace_multiple_tasks,
+                            &replacement, &original_id));
+    assert(task_manager_add(&manager, "old other", 1U, increment,
+                            &old_other_runs, &other_id));
+    assert(task_manager_start(&manager, original_id));
+    assert(task_manager_start(&manager, other_id));
+    task_manager_tick(&manager);
+    assert(old_other_runs == 0U);
+    assert(replacement.replacement_runs[0] == 0U);
+    assert(replacement.replacement_runs[1] == 0U);
+    task_manager_tick(&manager);
+    assert(replacement.replacement_runs[0] == 1U);
+    assert(replacement.replacement_runs[1] == 1U);
+}
+
+typedef struct {
+    TaskManager *manager;
+    size_t other_id;
+} StopOtherContext;
+
+static void stop_other_task(void *context)
+{
+    StopOtherContext *stop = context;
+    assert(task_manager_stop(stop->manager, stop->other_id));
+}
+
+static void test_callback_stop_prevents_later_run(void)
+{
+    TaskManager manager;
+    StopOtherContext stop = {&manager, 99U};
+    size_t first_id;
+    unsigned other_runs = 0U;
+
+    task_manager_init(&manager);
+    assert(task_manager_add(&manager, "stopper", 1U, stop_other_task,
+                            &stop, &first_id));
+    assert(task_manager_add(&manager, "other", 1U, increment,
+                            &other_runs, &stop.other_id));
+    assert(task_manager_start(&manager, first_id));
+    assert(task_manager_start(&manager, stop.other_id));
+    task_manager_tick(&manager);
+    assert(other_runs == 0U);
+    assert(manager.tasks[stop.other_id].run_count == 0U);
+    assert(manager.tasks[stop.other_id].state == TASK_STOPPED);
+}
+
 int main(void)
 {
     test_schedule_lifecycle();
@@ -163,7 +269,10 @@ int main(void)
     test_invalid_arguments_and_ids();
     test_capacity_and_duplicate_names();
     test_callback_reinitialization_does_not_count_replacement();
+    test_callback_append_waits_until_next_tick();
+    test_callback_reinitialization_stops_current_tick();
+    test_callback_stop_prevents_later_run();
 
-    puts("task manager tests passed (5 cases)");
+    puts("task manager tests passed (8 cases)");
     return 0;
 }
