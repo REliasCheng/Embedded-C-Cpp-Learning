@@ -28,6 +28,7 @@ typedef struct {
 typedef struct {
     TaskSlot tasks[TASK_MANAGER_CAPACITY];
     size_t count;
+    uint64_t generation;
 } TaskManager;
 
 void task_manager_init(TaskManager *manager);
@@ -39,6 +40,7 @@ bool task_manager_start(TaskManager *manager, size_t task_id);
 bool task_manager_stop(TaskManager *manager, size_t task_id);
 bool task_manager_fault(TaskManager *manager, size_t task_id);
 bool task_manager_reset(TaskManager *manager, size_t task_id);
+/* Visits only tasks present at tick entry. Reinitialization ends this tick. */
 void task_manager_tick(TaskManager *manager);
 
 #endif
