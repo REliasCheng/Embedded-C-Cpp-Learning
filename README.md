@@ -45,6 +45,7 @@
 | Command Framework | [`command.c`](projects/06_综合软件实践/嵌入式命令处理框架/practice/src/command.c) | [`test_command_framework.c`](projects/06_综合软件实践/嵌入式命令处理框架/tests/test_command_framework.c) | 固定容量输入、命令解析、错误边界与设备状态更新 |
 | Task Manager | [`task_manager.c`](projects/06_综合软件实践/轻量任务状态管理/practice/src/task_manager.c) | [`test_task_manager.c`](projects/06_综合软件实践/轻量任务状态管理/tests/test_task_manager.c) | 周期任务、运行状态、故障与复位流程 |
 | Firmware Console | [`firmware_console.c`](projects/06_综合软件实践/固件控制台集成/practice/src/firmware_console.c) | [`test_firmware_console.c`](projects/06_综合软件实践/固件控制台集成/tests/test_firmware_console.c) | 命令框架与任务管理的组合、回调边界与集成测试 |
+| Key FSM | [`key_fsm.c`](projects/05_嵌入式软件思想/状态机思想/practice/key_fsm.c) | [`test_key_fsm.c`](projects/05_嵌入式软件思想/状态机思想/tests/test_key_fsm.c) | 短按阈值、长按不误触发、重复事件与重初始化 |
 
 ### Capability Areas
 
@@ -77,14 +78,14 @@ assets/images/architecture/ 自绘架构图
 | --- | --- |
 | C/C++ 基础与模块化源码 | [`projects/01_C语言基础能力`](projects/01_C语言基础能力) → [`projects/04_C++程序设计`](projects/04_C++程序设计) |
 | 嵌入式软件结构源码 | [`projects/05_嵌入式软件思想`](projects/05_嵌入式软件思想) 与 [`projects/06_综合软件实践`](projects/06_综合软件实践) |
-| 主机端测试 | [`Command Framework tests`](projects/06_综合软件实践/嵌入式命令处理框架/tests) · [`Task Manager tests`](projects/06_综合软件实践/轻量任务状态管理/tests) · [`Firmware Console tests`](projects/06_综合软件实践/固件控制台集成/tests) |
+| 主机端测试 | [`Key FSM tests`](projects/05_嵌入式软件思想/状态机思想/tests) · [`Command Framework tests`](projects/06_综合软件实践/嵌入式命令处理框架/tests) · [`Task Manager tests`](projects/06_综合软件实践/轻量任务状态管理/tests) · [`Firmware Console tests`](projects/06_综合软件实践/固件控制台集成/tests) |
 | 构建、设计与调试文档 | [`docs`](docs) |
 
 ## 📚 Documentation
 
 ### Quick Start
 
-以下命令从仓库根目录构建并执行 Command Framework、Ring Buffer、Task Manager 和 Firmware Console 四组主机端测试。完整环境说明见[编译环境说明](docs/编译环境说明.md)。
+以下命令从仓库根目录构建并执行 Key FSM、Command Framework、Ring Buffer、Task Manager 和 Firmware Console 五组主机端测试。完整环境说明见[编译环境说明](docs/编译环境说明.md)。
 
 ```powershell
 python scripts/run_host_tests.py --compiler gcc
@@ -104,7 +105,7 @@ Linux 或安装了 Clang 的主机可把编译器参数改为 `clang`。测试�
 
 ### 💻 Host Test
 
-Command Framework、Ring Buffer、Task Manager 和 Firmware Console 的主机端测试当前均通过。错误路径测试覆盖短响应缓冲区、空参数、非法命令、解析隔离、任务容量与非法 ID；已覆盖的内部设备状态在命令失败时保持不变。
+Key FSM、Command Framework、Ring Buffer、Task Manager 和 Firmware Console 的主机端测试当前均通过。Key FSM 覆盖短按/长按边界、重复事件和重初始化；其他错误路径测试覆盖短响应缓冲区、空参数、非法命令、解析隔离、任务容量与非法 ID；已覆盖的内部设备状态在命令失败时保持不变。
 
 ### 🔨 Build Verification
 
