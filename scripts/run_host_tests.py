@@ -15,9 +15,18 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 COMMAND_ROOT = Path("projects/06_综合软件实践/嵌入式命令处理框架")
 TASK_ROOT = Path("projects/06_综合软件实践/轻量任务状态管理")
 CONSOLE_ROOT = Path("projects/06_综合软件实践/固件控制台集成")
+KEY_FSM_ROOT = Path("projects/05_嵌入式软件思想/状态机思想")
 
 
 TEST_SUITES = (
+    (
+        "key-fsm",
+        (
+            KEY_FSM_ROOT / "practice/key_fsm.c",
+            KEY_FSM_ROOT / "tests/test_key_fsm.c",
+        ),
+        (KEY_FSM_ROOT / "practice",),
+    ),
     (
         "command-framework",
         (
