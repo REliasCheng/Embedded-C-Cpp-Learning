@@ -294,6 +294,40 @@ static void test_ring_overflow_discards_until_lf(void)
     assert(engine.device.led_on);
 }
 
+static void test_inline_cr_rejected_without_changing_device(void)
+{
+    CommandEngine engine;
+    CommandResult result = COMMAND_EMPTY;
+    DeviceState before;
+    char response[64];
+
+    command_engine_init(&engine);
+    before = engine.device;
+    assert(run_line(&engine, "mode \r1\n", response, sizeof(response)) ==
+           COMMAND_INVALID_BYTE);
+    assert(strcmp(response, "ERR INVALID_BYTE") == 0);
+    assert_state_equal(&engine.device, &before);
+    assert(run_line(&engine, "led on\r\n", response, sizeof(response)) == COMMAND_OK);
+    assert(engine.device.led_on);
+
+    assert(command_engine_feed(&engine, (uint8_t)'\r'));
+    assert(!command_engine_process(&engine, response, sizeof(response), &result));
+    assert(command_engine_feed(&engine, (uint8_t)'\n'));
+    assert(command_engine_process(&engine, response, sizeof(response), &result));
+    assert(result == COMMAND_EMPTY);
+
+    assert(command_engine_feed(&engine, (uint8_t)'m'));
+    assert(command_engine_feed(&engine, (uint8_t)'o'));
+    assert(command_engine_feed(&engine, (uint8_t)'d'));
+    assert(command_engine_feed(&engine, (uint8_t)'e'));
+    assert(command_engine_feed(&engine, (uint8_t)' '));
+    assert(command_engine_feed(&engine, (uint8_t)'\r'));
+    assert(!command_engine_process(&engine, response, sizeof(response), &result));
+    assert(run_line(&engine, "1\n", response, sizeof(response)) == COMMAND_INVALID_BYTE);
+    assert(strcmp(response, "ERR INVALID_BYTE") == 0);
+    assert(engine.device.led_on);
+}
+
 int main(void)
 {
     test_success_and_exact_capacity();
@@ -305,7 +339,8 @@ int main(void)
     test_null_arguments();
     test_embedded_nul_rejects_whole_frame_and_recovers();
     test_ring_overflow_discards_until_lf();
+    test_inline_cr_rejected_without_changing_device();
 
-    puts("command framework tests passed (9 cases)");
+    puts("command framework tests passed (10 cases)");
     return 0;
 }

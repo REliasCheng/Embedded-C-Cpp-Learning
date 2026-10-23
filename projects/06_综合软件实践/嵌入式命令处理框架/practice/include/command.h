@@ -25,6 +25,7 @@ typedef struct {
     DeviceState device;
     char line[COMMAND_LINE_CAPACITY];
     size_t line_length;
+    bool pending_cr;
     bool dropping_line;
     CommandResult dropped_result;
 } CommandEngine;

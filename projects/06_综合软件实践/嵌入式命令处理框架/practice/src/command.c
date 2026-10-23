@@ -184,6 +184,7 @@ void command_engine_init(CommandEngine *engine)
     ring_buffer_init(&engine->rx);
     device_init(&engine->device);
     engine->line_length = 0U;
+    engine->pending_cr = false;
     engine->dropping_line = false;
     engine->dropped_result = COMMAND_OK;
 }
@@ -201,11 +202,23 @@ bool command_engine_process(CommandEngine *engine, char *response, size_t respon
     }
     if (ring_buffer_take_overflow(&engine->rx)) {
         engine->line_length = 0U;
+        engine->pending_cr = false;
         engine->dropping_line = true;
         engine->dropped_result = COMMAND_INPUT_OVERFLOW;
     }
     while (ring_buffer_pop(&engine->rx, &byte)) {
+        if (engine->pending_cr) {
+            engine->pending_cr = false;
+            if (byte != '\n') {
+                engine->dropping_line = true;
+                engine->dropped_result = COMMAND_INVALID_BYTE;
+                engine->line_length = 0U;
+            }
+        }
         if (byte == '\r') {
+            if (!engine->dropping_line) {
+                engine->pending_cr = true;
+            }
             continue;
         }
         if (byte == '\n') {
