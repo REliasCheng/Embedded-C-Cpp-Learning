@@ -113,6 +113,8 @@ static void test_invalid_commands_preserve_state(void)
     assert_state_equal(&engine.device, &before);
     assert(run_line(&engine, "mode 4\n", response, sizeof(response)) == COMMAND_BAD_ARGUMENT);
     assert_state_equal(&engine.device, &before);
+    assert(run_line(&engine, "mode -0\n", response, sizeof(response)) == COMMAND_BAD_ARGUMENT);
+    assert_state_equal(&engine.device, &before);
     assert(run_line(&engine, "mode 2x\n", response, sizeof(response)) == COMMAND_BAD_ARGUMENT);
     assert_state_equal(&engine.device, &before);
     assert(run_line(&engine, "mode 1 extra\n", response, sizeof(response)) == COMMAND_BAD_ARGUMENT);
@@ -134,6 +136,10 @@ static void test_parser_regression(void)
     assert(engine.device.led_on);
     assert(run_line(&engine, " mode 2 \n", response, sizeof(response)) == COMMAND_OK);
     assert(engine.device.mode == 2U);
+    assert(run_line(&engine, "mode +1\n", response, sizeof(response)) == COMMAND_OK);
+    assert(engine.device.mode == 1U);
+    assert(run_line(&engine, "mode 0\n", response, sizeof(response)) == COMMAND_OK);
+    assert(engine.device.mode == 0U);
     assert(run_line(&engine, "status extra\n", response, sizeof(response)) == COMMAND_BAD_ARGUMENT);
     assert(run_line(&engine, "one two three four five\n", response, sizeof(response)) ==
            COMMAND_BAD_ARGUMENT);

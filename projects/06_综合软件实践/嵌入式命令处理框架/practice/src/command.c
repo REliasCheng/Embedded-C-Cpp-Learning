@@ -67,6 +67,10 @@ static CommandResult handle_mode(DeviceState *device, int argc, char **argv, cha
     if (argc != 2) {
         return COMMAND_BAD_ARGUMENT;
     }
+    /* strtoul accepts a leading minus sign, including "-0". */
+    if (argv[1][0] == '-') {
+        return COMMAND_BAD_ARGUMENT;
+    }
     mode = strtoul(argv[1], &end, 10);
     if (end == argv[1] || *end != '\0' || mode > 3UL) {
         return COMMAND_BAD_ARGUMENT;
